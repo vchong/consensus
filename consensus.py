@@ -2,7 +2,7 @@
 
 from urllib import request
 import math
-from sys import exit
+import sys
 from json import loads
 
 ERR_MSG = f"\033[91m[ERR] API endpoint unreachable: api\n" \
@@ -11,8 +11,12 @@ ERR_MSG = f"\033[91m[ERR] API endpoint unreachable: api\n" \
           f"Bugreports Discord: Yep++#9963\033[0m"
 
 # default ports
-REST = "http://127.0.0.1:1317"
-RPC = "http://127.0.0.1:26657"
+#REST = "http://127.0.0.1:1317"
+#RPC = "http://127.0.0.1:26657"
+#REST = "http://s8:30317"
+#RPC = "http://s8:30657"
+REST = "http://" + sys.argv[1]
+RPC = "http://" + sys.argv[2]
 
 def handle_request(api: str, pattern: str):
     try:
@@ -210,6 +214,10 @@ def get_evidence(height):
 
 
 def main(STATE):
+    #print(f"REST: {sys.argv[1]=}")
+    #print(f"RPC: {sys.argv[2]=}")
+    print(f"REST: " + sys.argv[1])
+    print(f"RPC: " + sys.argv[2])
     validators, total_validators = merge_info()
 
     online_vals = 0
