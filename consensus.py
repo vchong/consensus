@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #  Github https://github.com/Northa
 
 from urllib import request
@@ -15,8 +16,10 @@ ERR_MSG = f"\033[91m[ERR] API endpoint unreachable: api\n" \
 #RPC = "http://127.0.0.1:26657"
 #REST = "http://s8:30317"
 #RPC = "http://s8:30657"
-REST = "http://" + sys.argv[1]
-RPC = "http://" + sys.argv[2]
+#REST = "http://" + sys.argv[1]
+#RPC = "http://" + sys.argv[2]
+REST = None
+RPC = None
 
 def handle_request(api: str, pattern: str):
     try:
@@ -212,12 +215,24 @@ def get_evidence(height):
             # print(colored(f"Evidence: {moniker}\nHeight: {evidence['height']} {evidence['consensus_address']} power: {evidence['power']}\n", 'yellow'))
             print(f"\033[93mEvidence: {moniker}\nHeight: {evidence['height']} {evidence['consensus_address']} power: {evidence['power']}\033[0m\n")
 
+def init():
+    if len(sys.argv) < 3:
+        print(f"Please enter args 1 n 2.")
+        print(f"Usage: consensus.py <IP:REST_PORT> <IP:RPC_PORT>")
+        print(f"E.g.: consensus.py s8:30317 s8:30657")
+        exit(123)
 
-def main(STATE):
+    global REST
+    global RPC
+    REST = "http://" + sys.argv[1]
+    RPC = "http://" + sys.argv[2]
+
     #print(f"REST: {sys.argv[1]=}")
     #print(f"RPC: {sys.argv[2]=}")
-    print(f"REST: " + sys.argv[1])
-    print(f"RPC: " + sys.argv[2])
+    print(f"REST: " + REST)
+    print(f"RPC: " + RPC)
+
+def main(STATE):
     validators, total_validators = merge_info()
 
     online_vals = 0
@@ -232,6 +247,9 @@ def main(STATE):
 
 
 if __name__ == '__main__':
+    init()
+
     STATE = handle_request(RPC, 'dump_consensus_state')
 
+    #main()
     exit(main(STATE))
